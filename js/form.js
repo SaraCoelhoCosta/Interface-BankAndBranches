@@ -1,28 +1,39 @@
 // Criar 
 function createCity() {
-    const form = document.getElementById("myForm");
+    const id = document.getElementById("id").value;
+    const nome = document.getElementById("nome").value;
 
-    form.addEventListener("submit", (event) => {
-        event.preventDefault();
+    const requestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            id: id,
+            nome: nome,
+        }),
+    };
 
-        const id = document.getElementById("id").value;
-        const nome = document.getElementById("nome").value;
-
-        const requestOptions = {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                id: id,
-                nome: nome,
-            }),
-        };
-
-        fetch("http://localhost:8000/cidades", requestOptions)
-            .then((response) => response.json())
-            .then((data) => console.log(data))
-            .catch((error) => console.error(error));
-    });
+    fetch("http://localhost:8000/cidades", requestOptions)
+        .then((response) => response.json())
+        .then((data) => console.log(data))
+        .catch((error) => console.error(error));
 }
+
+// Enviando dados (não se sabe os dados)
+function sendData() {
+    const form = document.querySelector('#cityForm');
+    const formData = new FormData(form);
+    const value = Object.fromEntries(formData.entries());
+    const requestOptions = {
+        method: 'POST',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(value)
+    };
+    fetch("http://localhost:8000/cidades", requestOptions)
+        .then((response) => response.json())
+        .then((data) => console.log(data))
+        .catch((error) => console.error(error));
+}
+
 
 // Atualizar 
 function updateCity() {
