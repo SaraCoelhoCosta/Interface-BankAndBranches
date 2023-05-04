@@ -1,19 +1,37 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Exemplo de consumo de API com FastAPI</title>
+    <title>Tabela - API</title>
     <!-- LINK da TABELA https://dev.to/dcodeyt/creating-beautiful-html-tables-with-css-428l -->
     <link rel="stylesheet" type="text/css" href="../css/table.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;800&display=swap"
+    rel="stylesheet">
+      <!-- Bootstrap CSS -->
+      <link rel="stylesheet" href="css/bootstrap.min.css">
+      <!----css3---->
+      <link rel="stylesheet" href="css/custom.css">
+      
+      
+      <!--google fonts -->
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
+  
+     <!--google material icon-->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Icons"rel="stylesheet">
 </head>
-<body>
+<body class="bg-blue-300  font-[Poppins]">
     <table id="dados" class="styled-table">
         <thead>
             <tr>
                 <th>Id</th>
                 <th>Nome</th>
+                <th>Ações</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody class="linha-1">
         </tbody>
     </table>
     <script src="../js/table.js"></script>
