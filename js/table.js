@@ -1,6 +1,6 @@
 // Listar tudo
-function listAccount() {
-    fetch(`http://127.0.0.1:8000/contas`)
+function listCity() {
+    fetch(`http://127.0.0.1:8000/cidades`)
         .then(response => response.json())
         .then(data => {
             // Selecionar o corpo da tabela
@@ -9,11 +9,15 @@ function listAccount() {
             // Iterar sobre os dados e criar linhas na tabela
             data.forEach(item => {
                 const row = document.createElement("tr");
-                const idCell = document.createElement("td");
+                row.classList.add("border-b", "dark:border-gray-700");
+                const idCell = document.createElement("th");
+                idCell.classList.add("px-4", "py-3", "font-medium", "text-gray-900", "whitespace-nowrap", "dark:text-white");
                 idCell.textContent = item.id;
                 const nomeCell = document.createElement("td");
+                nomeCell.classList.add("px-4", "py-3");
                 nomeCell.textContent = item.nome;
                 const buttonsCell = document.createElement("td");
+                buttonsCell.classList.add("px-4", "py-3");
                 const buttonGroup = document.createElement("div");
 
                 const editIcon = document.createElement("svg");
@@ -61,5 +65,3 @@ function listAccount() {
             });
         });
 }
-
-listCity();
