@@ -23,17 +23,17 @@ function listCity() {
                 const editIcon = document.createElement("svg");
                 editIcon.classList.add("w-5", "h-5", "mr-1", "text-white");
                 editIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="None" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path fill-rule="evenodd" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>';
-                
+
                 const editButton = document.createElement("button");
                 //editButton.textContent = "Editar";
                 editButton.style.marginRight = "5px"; // Espaço entre botões
                 editButton.classList.add("inline-flex", "w-full", "items-center", "text-white", "justify-center", "bg-blue-700", "hover:bg-blue-800", "focus:ring-4", "focus:outline-none", "focus:ring-blue-300", "font-medium", "rounded-lg", "text-sm", "py-2", "text-center", "dark:bg-blue-600", "dark:hover:bg-blue-700", "dark:focus:ring-blue-800"); // adiciona as classes "btn" e "btn-blue" ao botão
-                
+
                 editButton.addEventListener("click", () => {
                     console.log(`Editar ${item.id} - ${item.nome}`);
                 });
                 editButton.appendChild(editIcon);
-                
+
 
                 const deleteIcon = document.createElement("svg");
                 deleteIcon.classList.add("w-5", "h-5", "mr-1", "text-white");
@@ -44,17 +44,17 @@ function listCity() {
                 deleteButton.classList.add("inline-flex", "w-full", "items-center", "text-white", "justify-center", "bg-red-600", "hover:bg-red-700", "focus:ring-4", "focus:outline-none", "focus:ring-red-300", "font-medium", "rounded-lg", "text-sm", "py-2", "text-center", "dark:bg-red-500", "dark:hover:bg-red-600", "dark:focus:ring-red-900"); // adiciona as classes "btn" e "btn-blue" ao botão
 
                 deleteButton.addEventListener("click", () => {
-                    console.log(`Excluir ${item.id} - ${item.nome}`);
+                    deleteCity(item.id);
+                    // console.log(`Excluir ${item.id} - ${item.nome}`);
                 });
                 deleteButton.appendChild(deleteIcon);
 
                 // Adicionar botões à célula da tabela
-                
                 buttonGroup.style.display = "flex"; // exibe os botões em uma linha
                 buttonGroup.appendChild(editButton);
                 buttonGroup.appendChild(deleteButton);
                 buttonsCell.appendChild(buttonGroup);
-                
+
                 // Adicionar células à linha da tabela
                 row.appendChild(idCell);
                 row.appendChild(nomeCell);
@@ -64,4 +64,18 @@ function listCity() {
                 tableBody.appendChild(row);
             });
         });
-}
+};
+
+function deleteCity(id){
+    fetch(`http://127.0.0.1:8000/cidades/${id}`, {
+                        method: 'DELETE',
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Erro ao tentar remover cidade');
+                            }
+                            console.log('Cidade removida com sucesso');
+                            location.reload();
+                        })
+                        .catch(error => console.error(error));
+};
