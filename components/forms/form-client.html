@@ -13,6 +13,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="script.js" defer></script>
     <link rel="stylesheet" href="style.css" />
+    <script src="../../js/form/list.js"></script>
+    <script>listAccount()</script>
 
 </head>
 
@@ -133,14 +135,11 @@
                         </div>
 
                         <div class="flex flex-col">
-                            <label for="tipo_conta"
+                            <label for="tipo_contas"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tipo de conta</label>
-                            <select name="tipo_conta" id="tipo_conta"
+                            <select name="tipo_contas" id="tipo_contas"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 required>
-                                <option value="">Selecione o tipo de conta</option>
-                                <option value="1">Item 1</option>
-                                <option value="2">Item 2</option>
                             </select>
                         </div>
                     </div>

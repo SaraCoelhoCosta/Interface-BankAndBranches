@@ -1,6 +1,6 @@
 // Listar tudo
-function listCity() {
-    fetch(`http://127.0.0.1:8000/cidades`)
+function listAccount() {
+    fetch(`http://127.0.0.1:8000/contas`)
         .then(response => response.json())
         .then(data => {
             // Selecionar o corpo da tabela
