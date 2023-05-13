@@ -1,6 +1,6 @@
 // Listar tudo
-function listCity() {
-    fetch(`http://127.0.0.1:8000/cidades`)
+function listAccount() {
+    fetch(`http://127.0.0.1:8000/contas`)
         .then(response => response.json())
         .then(data => {
             // Selecionar o corpo da tabela
@@ -9,27 +9,31 @@ function listCity() {
             // Iterar sobre os dados e criar linhas na tabela
             data.forEach(item => {
                 const row = document.createElement("tr");
-                const idCell = document.createElement("td");
+                row.classList.add("border-b", "dark:border-gray-700");
+                const idCell = document.createElement("th");
+                idCell.classList.add("px-4", "py-3", "font-medium", "text-gray-900", "whitespace-nowrap", "dark:text-white");
                 idCell.textContent = item.id;
-                const nomeCell = document.createElement("td");
-                nomeCell.textContent = item.nome;
+                const tipoContaCell = document.createElement("td");
+                tipoContaCell.classList.add("px-4", "py-3");
+                tipoContaCell.textContent = item.tipo_conta;
                 const buttonsCell = document.createElement("td");
+                buttonsCell.classList.add("px-4", "py-3");
                 const buttonGroup = document.createElement("div");
 
                 const editIcon = document.createElement("svg");
                 editIcon.classList.add("w-5", "h-5", "mr-1", "text-white");
                 editIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="None" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path fill-rule="evenodd" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>';
-                
+
                 const editButton = document.createElement("button");
                 //editButton.textContent = "Editar";
                 editButton.style.marginRight = "5px"; // Espaço entre botões
                 editButton.classList.add("inline-flex", "w-full", "items-center", "text-white", "justify-center", "bg-blue-700", "hover:bg-blue-800", "focus:ring-4", "focus:outline-none", "focus:ring-blue-300", "font-medium", "rounded-lg", "text-sm", "py-2", "text-center", "dark:bg-blue-600", "dark:hover:bg-blue-700", "dark:focus:ring-blue-800"); // adiciona as classes "btn" e "btn-blue" ao botão
-                
+
                 editButton.addEventListener("click", () => {
-                    console.log(`Editar ${item.id} - ${item.nome}`);
+                    window.location.href = `../../components/forms/form-account.html?id=${item.id}`;
                 });
                 editButton.appendChild(editIcon);
-                
+
 
                 const deleteIcon = document.createElement("svg");
                 deleteIcon.classList.add("w-5", "h-5", "mr-1", "text-white");
@@ -40,26 +44,97 @@ function listCity() {
                 deleteButton.classList.add("inline-flex", "w-full", "items-center", "text-white", "justify-center", "bg-red-600", "hover:bg-red-700", "focus:ring-4", "focus:outline-none", "focus:ring-red-300", "font-medium", "rounded-lg", "text-sm", "py-2", "text-center", "dark:bg-red-500", "dark:hover:bg-red-600", "dark:focus:ring-red-900"); // adiciona as classes "btn" e "btn-blue" ao botão
 
                 deleteButton.addEventListener("click", () => {
-                    console.log(`Excluir ${item.id} - ${item.nome}`);
+                    deleteAccount(item.id);
+                    // console.log(`Excluir ${item.id} - ${item.nome}`);
                 });
                 deleteButton.appendChild(deleteIcon);
 
+
                 // Adicionar botões à célula da tabela
-                
                 buttonGroup.style.display = "flex"; // exibe os botões em uma linha
                 buttonGroup.appendChild(editButton);
                 buttonGroup.appendChild(deleteButton);
                 buttonsCell.appendChild(buttonGroup);
-                
+
                 // Adicionar células à linha da tabela
                 row.appendChild(idCell);
-                row.appendChild(nomeCell);
+                row.appendChild(tipoContaCell);
                 row.appendChild(buttonsCell);
 
                 // Adicionar linha à tabela
                 tableBody.appendChild(row);
             });
         });
-}
+};
 
-listCity();
+function deleteAccount(id) {
+    fetch(`http://127.0.0.1:8000/contas/${id}`, {
+        method: 'DELETE',
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro ao tentar remover conta');
+            }
+            console.log('Conta removida com sucesso');
+            location.reload();
+        })
+        .catch(error => console.error(error));
+};
+
+// Carregar dados
+function loadAccount() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const accountId = urlParams.get('id');
+    if (accountId != null) {
+        fetch(`http://localhost:8000/contas/${accountId}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("id").value = data.id;
+                document.getElementById("tipo_conta").value = data.tipo_conta;
+                document.getElementById("agencias_id").value = data.agencias_id;
+            })
+            .catch(error => console.error(error));
+    }
+};
+
+function saveAccount() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const accountId = urlParams.get('id');
+
+    if (accountId != null) {
+        const form = document.querySelector('#account-form');
+        const formData = new FormData(form);
+        const value = Object.fromEntries(formData.entries());
+        const requestOptions = {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(value)
+        };
+
+        fetch(`http://127.0.0.1:8000/contas/${accountId}`, requestOptions)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                location.reload();
+            })
+            .catch(error => console.error(error));
+
+    }
+    else {
+        const form = document.querySelector('#account-form');
+        const formData = new FormData(form);
+        const value = Object.fromEntries(formData.entries());
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(value)
+        };
+        fetch(`http://127.0.0.1:8000/contas`, requestOptions)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                window.location.href = '../../components/tables/table-account.html';
+            })
+            .catch(error => console.error(error));
+    }
+};
