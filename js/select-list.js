@@ -1,4 +1,6 @@
-function createCity() {
+// Puxa os dados da API para listar no ComboBox dos formulários
+
+function listCity() {
     fetch(`http://127.0.0.1:8000/cidades`)
         .then(response => response.json())
         .then(data => {
@@ -24,12 +26,12 @@ function createCity() {
         });
 }
 
-function createBranch() {
+function listBranch() {
     fetch(`http://127.0.0.1:8000/agencias`)
         .then(response => response.json())
         .then(data => {
             // Selecionar o elemento select
-            const select = document.querySelector("#agencias");
+            const select = document.querySelector("#agencias_id");
 
             // Limpar o elemento select
             select.innerHTML = "";
@@ -50,7 +52,7 @@ function createBranch() {
         });
 }
 
-function createAccount() {
+function listAccount() {
     fetch(`http://127.0.0.1:8000/contas`)
         .then(response => response.json())
         .then(data => {
