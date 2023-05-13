@@ -29,7 +29,7 @@ function listBranch() {
         .then(response => response.json())
         .then(data => {
             // Selecionar o elemento select
-            const select = document.querySelector("#agencias");
+            const select = document.querySelector("#agencias_id");
 
             // Limpar o elemento select
             select.innerHTML = "";

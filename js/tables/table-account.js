@@ -30,7 +30,7 @@ function listAccount() {
                 editButton.classList.add("inline-flex", "w-full", "items-center", "text-white", "justify-center", "bg-blue-700", "hover:bg-blue-800", "focus:ring-4", "focus:outline-none", "focus:ring-blue-300", "font-medium", "rounded-lg", "text-sm", "py-2", "text-center", "dark:bg-blue-600", "dark:hover:bg-blue-700", "dark:focus:ring-blue-800"); // adiciona as classes "btn" e "btn-blue" ao botão
 
                 editButton.addEventListener("click", () => {
-                    console.log(`Editar ${item.id} - ${item.nome}`);
+                    window.location.href = `../../components/forms/form-account.html?id=${item.id}`;
                 });
                 editButton.appendChild(editIcon);
 
@@ -49,6 +49,7 @@ function listAccount() {
                 });
                 deleteButton.appendChild(deleteIcon);
 
+
                 // Adicionar botões à célula da tabela
                 buttonGroup.style.display = "flex"; // exibe os botões em uma linha
                 buttonGroup.appendChild(editButton);
@@ -66,16 +67,74 @@ function listAccount() {
         });
 };
 
-function deleteAccount(id){
+function deleteAccount(id) {
     fetch(`http://127.0.0.1:8000/contas/${id}`, {
-                        method: 'DELETE',
-                    })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Erro ao tentar remover conta');
-                            }
-                            console.log('Conta removida com sucesso');
-                            location.reload();
-                        })
-                        .catch(error => console.error(error));
+        method: 'DELETE',
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro ao tentar remover conta');
+            }
+            console.log('Conta removida com sucesso');
+            location.reload();
+        })
+        .catch(error => console.error(error));
+};
+
+// Carregar dados
+function loadAccount() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const accountId = urlParams.get('id');
+    if (accountId != null) {
+        fetch(`http://localhost:8000/contas/${accountId}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("id").value = data.id;
+                document.getElementById("tipo_conta").value = data.tipo_conta;
+                document.getElementById("agencias_id").value = data.agencias_id;
+            })
+            .catch(error => console.error(error));
+    }
+};
+
+function saveAccount() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const accountId = urlParams.get('id');
+
+    if (accountId != null) {
+        const form = document.querySelector('#account-form');
+        const formData = new FormData(form);
+        const value = Object.fromEntries(formData.entries());
+        const requestOptions = {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(value)
+        };
+
+        fetch(`http://127.0.0.1:8000/contas/${accountId}`, requestOptions)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                location.reload();
+            })
+            .catch(error => console.error(error));
+
+    }
+    else {
+        const form = document.querySelector('#account-form');
+        const formData = new FormData(form);
+        const value = Object.fromEntries(formData.entries());
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(value)
+        };
+        fetch(`http://127.0.0.1:8000/contas`, requestOptions)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                window.location.href = '../../components/tables/table-account.html';
+            })
+            .catch(error => console.error(error));
+    }
 };
