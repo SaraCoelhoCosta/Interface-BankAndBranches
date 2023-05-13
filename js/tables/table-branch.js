@@ -1,5 +1,5 @@
 // Listar tudo
-function listAgency() {
+function listBranch() {
     fetch(`http://127.0.0.1:8000/agencias`)
         .then(response => response.json())
         .then(data => {
@@ -48,7 +48,7 @@ function listAgency() {
                 deleteButton.classList.add("inline-flex", "w-full", "items-center", "text-white", "justify-center", "bg-red-600", "hover:bg-red-700", "focus:ring-4", "focus:outline-none", "focus:ring-red-300", "font-medium", "rounded-lg", "text-sm", "py-2", "text-center", "dark:bg-red-500", "dark:hover:bg-red-600", "dark:focus:ring-red-900"); // adiciona as classes "btn" e "btn-blue" ao botão
 
                 deleteButton.addEventListener("click", () => {
-                    deleteCity(item.id);
+                    deleteBranch(item.id);
                     // console.log(`Excluir ${item.id} - ${item.nome}`);
                 });
                 deleteButton.appendChild(deleteIcon);
@@ -71,7 +71,7 @@ function listAgency() {
         });
 };
 
-function deleteCity(id){
+function deleteBranch(id){
     fetch(`http://127.0.0.1:8000/agencias/${id}`, {
                         method: 'DELETE',
                     })
