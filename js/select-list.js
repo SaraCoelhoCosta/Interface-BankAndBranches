@@ -5,7 +5,7 @@ function listCity() {
         .then(response => response.json())
         .then(data => {
             // Selecionar o elemento select
-            const select = document.querySelector("#cidades");
+            const select = document.querySelector("#cidades_id");
 
             // Limpar o elemento select
             select.innerHTML = "";

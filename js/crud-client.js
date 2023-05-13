@@ -1,10 +1,10 @@
 // Listar tudo
-function listAccount() {
-    fetch(`http://127.0.0.1:8000/contas`)
+function listClient() {
+    fetch(`http://127.0.0.1:8000/clientes`)
         .then(response => response.json())
         .then(data => {
             // Selecionar o corpo da tabela
-            const tableBody = document.querySelector("#account-table tbody");
+            const tableBody = document.querySelector("#client-table tbody");
 
             // Iterar sobre os dados e criar linhas na tabela
             data.forEach(item => {
@@ -13,9 +13,12 @@ function listAccount() {
                 const idCell = document.createElement("th");
                 idCell.classList.add("px-4", "py-3", "font-medium", "text-gray-900", "whitespace-nowrap", "dark:text-white");
                 idCell.textContent = item.id;
-                const tipoContaCell = document.createElement("td");
-                tipoContaCell.classList.add("px-4", "py-3");
-                tipoContaCell.textContent = item.tipo_conta;
+                const nomeCell = document.createElement("td");
+                nomeCell.classList.add("px-4", "py-3");
+                nomeCell.textContent = item.nome;
+                const telefoneCell = document.createElement("td");
+                telefoneCell.classList.add("px-4", "py-3");
+                telefoneCell.textContent = item.telefone;
                 const buttonsCell = document.createElement("td");
                 buttonsCell.classList.add("px-4", "py-3");
                 const buttonGroup = document.createElement("div");
@@ -30,7 +33,7 @@ function listAccount() {
                 editButton.classList.add("inline-flex", "w-full", "items-center", "text-white", "justify-center", "bg-blue-700", "hover:bg-blue-800", "focus:ring-4", "focus:outline-none", "focus:ring-blue-300", "font-medium", "rounded-lg", "text-sm", "py-2", "text-center", "dark:bg-blue-600", "dark:hover:bg-blue-700", "dark:focus:ring-blue-800"); // adiciona as classes "btn" e "btn-blue" ao botão
 
                 editButton.addEventListener("click", () => {
-                    window.location.href = `../../components/forms/form-account.html?id=${item.id}`;
+                    window.location.href = `../../components/forms/form-client.html?id=${item.id}`;
                 });
                 editButton.appendChild(editIcon);
 
@@ -44,11 +47,10 @@ function listAccount() {
                 deleteButton.classList.add("inline-flex", "w-full", "items-center", "text-white", "justify-center", "bg-red-600", "hover:bg-red-700", "focus:ring-4", "focus:outline-none", "focus:ring-red-300", "font-medium", "rounded-lg", "text-sm", "py-2", "text-center", "dark:bg-red-500", "dark:hover:bg-red-600", "dark:focus:ring-red-900"); // adiciona as classes "btn" e "btn-blue" ao botão
 
                 deleteButton.addEventListener("click", () => {
-                    deleteAccount(item.id);
+                    deleteClient(item.id);
                     // console.log(`Excluir ${item.id} - ${item.nome}`);
                 });
                 deleteButton.appendChild(deleteIcon);
-
 
                 // Adicionar botões à célula da tabela
                 buttonGroup.style.display = "flex"; // exibe os botões em uma linha
@@ -58,7 +60,8 @@ function listAccount() {
 
                 // Adicionar células à linha da tabela
                 row.appendChild(idCell);
-                row.appendChild(tipoContaCell);
+                row.appendChild(nomeCell);
+                row.appendChild(telefoneCell);
                 row.appendChild(buttonsCell);
 
                 // Adicionar linha à tabela
@@ -67,51 +70,91 @@ function listAccount() {
         });
 };
 
-function deleteAccount(id) {
-    fetch(`http://127.0.0.1:8000/contas/${id}`, {
+function deleteClient(id) {
+    fetch(`http://127.0.0.1:8000/clientes/${id}`, {
         method: 'DELETE',
     })
         .then(response => {
             if (!response.ok) {
-                throw new Error('Erro ao tentar remover conta');
+                throw new Error('Erro ao tentar remover cliente');
             }
-            console.log('Conta removida com sucesso');
+            console.log('Cliente removido com sucesso');
             location.reload();
         })
         .catch(error => console.error(error));
 };
 
+
+
 // Carregar dados
-function loadAccount() {
+function loadClient() {
     const urlParams = new URLSearchParams(window.location.search);
-    const accountId = urlParams.get('id');
-    if (accountId != null) {
-        fetch(`http://localhost:8000/contas/${accountId}`)
+    const clientId = urlParams.get('id');
+    if (clientId != null) {
+        fetch(`http://localhost:8000/clientes/${clientId}`)
             .then(response => response.json())
             .then(data => {
                 document.getElementById("id").value = data.id;
-                document.getElementById("tipo_conta").value = data.tipo_conta;
-                document.getElementById("agencias_id").value = data.agencias_id;
+                document.getElementById("nome").value = data.nome;
+                document.getElementById("telefone").value = data.telefone;
+                document.getElementById("cep").value = data.cep;
+                document.getElementById("endereco").value = data.endereco;
+                document.getElementById("descricao").value = data.descricao;
+            })
+            .catch(error => console.error(error));
+        fetch(`http://localhost:8000/clientes_has_contas/${clientId}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("tipo_contas").value = data.contas_id;
             })
             .catch(error => console.error(error));
     }
 };
 
-function saveAccount() {
+function saveClient() {
     const urlParams = new URLSearchParams(window.location.search);
-    const accountId = urlParams.get('id');
+    const clientId = urlParams.get('id');
 
-    if (accountId != null) {
-        const form = document.querySelector('#account-form');
-        const formData = new FormData(form);
-        const value = Object.fromEntries(formData.entries());
-        const requestOptions = {
+    if (clientId != null) {
+        const nome = document.getElementById("nome").value;
+        const endereco = document.getElementById("endereco").value;
+        const cep = document.getElementById("cep").value;
+        const telefone = document.getElementById("telefone").value;
+        const descricao = document.getElementById("descricao").value;
+        const tipo_contas = document.getElementById("tipo_contas").value;
+
+        const requestOptions1 = {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(value)
+            body: JSON.stringify({
+                id: clientId,
+                nome: nome,
+                endereco: endereco,
+                cep: cep,
+                telefone: telefone,
+                descricao: descricao,
+            }),
         };
 
-        fetch(`http://127.0.0.1:8000/contas/${accountId}`, requestOptions)
+        fetch(`http://127.0.0.1:8000/clientes/${clientId}`, requestOptions1)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+
+            })
+            .catch(error => console.error(error));
+
+
+        const requestOptions2 = {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                clientes_id: clientId,
+                contas_id: tipo_contas,
+            }),
+        };
+
+        fetch(`http://127.0.0.1:8000/clientes_has_contas/${clientId}`, requestOptions2)
             .then(response => response.json())
             .then(data => {
                 console.log(data);
@@ -121,20 +164,50 @@ function saveAccount() {
 
     }
     else {
-        const form = document.querySelector('#account-form');
-        const formData = new FormData(form);
-        const value = Object.fromEntries(formData.entries());
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(value)
+        const id = document.getElementById("id").value;
+        const nome = document.getElementById("nome").value;
+        const endereco = document.getElementById("endereco").value;
+        const cep = document.getElementById("cep").value;
+        const telefone = document.getElementById("telefone").value;
+        const descricao = document.getElementById("descricao").value;
+        const tipo_contas = document.getElementById("tipo_contas").value;
+
+        const requestOptions1 = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                id: id,
+                nome: nome,
+                endereco: endereco,
+                cep: cep,
+                telefone: telefone,
+                descricao: descricao,
+            }),
         };
-        fetch(`http://127.0.0.1:8000/contas`, requestOptions)
+
+        fetch(`http://127.0.0.1:8000/clientes`, requestOptions1)
             .then(response => response.json())
             .then(data => {
                 console.log(data);
-                window.location.href = '../../components/tables/table-account.html';
             })
             .catch(error => console.error(error));
+
+        const requestOptions2 = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                clientes_id: id,
+                contas_id: tipo_contas,
+            }),
+        };
+
+        fetch(`http://127.0.0.1:8000/clientes_has_contas`, requestOptions2)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                window.location.href = '../../components/tables/table-client.html';
+            })
+            .catch(error => console.error(error));
+
     }
 };

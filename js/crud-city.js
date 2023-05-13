@@ -1,10 +1,10 @@
 // Listar tudo
-function listClient() {
-    fetch(`http://127.0.0.1:8000/clientes`)
+function listCity() {
+    fetch(`http://127.0.0.1:8000/cidades`)
         .then(response => response.json())
         .then(data => {
             // Selecionar o corpo da tabela
-            const tableBody = document.querySelector("#dados tbody");
+            const tableBody = document.querySelector("#city-table tbody");
 
             // Iterar sobre os dados e criar linhas na tabela
             data.forEach(item => {
@@ -16,18 +16,6 @@ function listClient() {
                 const nomeCell = document.createElement("td");
                 nomeCell.classList.add("px-4", "py-3");
                 nomeCell.textContent = item.nome;
-                const enderecoCell = document.createElement("td");
-                enderecoCell.classList.add("px-4", "py-3");
-                enderecoCell.textContent = item.endereco;
-                const cepCell = document.createElement("td");
-                cepCell.classList.add("px-4", "py-3");
-                cepCell.textContent = item.cep;
-                const telefoneCell = document.createElement("td");
-                telefoneCell.classList.add("px-4", "py-3");
-                telefoneCell.textContent = item.telefone;
-                const descricaoCell = document.createElement("td");
-                descricaoCell.classList.add("px-4", "py-3");
-                descricaoCell.textContent = item.descricao;
                 const buttonsCell = document.createElement("td");
                 buttonsCell.classList.add("px-4", "py-3");
                 const buttonGroup = document.createElement("div");
@@ -42,7 +30,7 @@ function listClient() {
                 editButton.classList.add("inline-flex", "w-full", "items-center", "text-white", "justify-center", "bg-blue-700", "hover:bg-blue-800", "focus:ring-4", "focus:outline-none", "focus:ring-blue-300", "font-medium", "rounded-lg", "text-sm", "py-2", "text-center", "dark:bg-blue-600", "dark:hover:bg-blue-700", "dark:focus:ring-blue-800"); // adiciona as classes "btn" e "btn-blue" ao botão
 
                 editButton.addEventListener("click", () => {
-                    console.log(`Editar ${item.id} - ${item.nome}`);
+                    window.location.href = `../../components/forms/form-city.html?id=${item.id}`;
                 });
                 editButton.appendChild(editIcon);
 
@@ -56,7 +44,7 @@ function listClient() {
                 deleteButton.classList.add("inline-flex", "w-full", "items-center", "text-white", "justify-center", "bg-red-600", "hover:bg-red-700", "focus:ring-4", "focus:outline-none", "focus:ring-red-300", "font-medium", "rounded-lg", "text-sm", "py-2", "text-center", "dark:bg-red-500", "dark:hover:bg-red-600", "dark:focus:ring-red-900"); // adiciona as classes "btn" e "btn-blue" ao botão
 
                 deleteButton.addEventListener("click", () => {
-                    deleteClient(item.id);
+                    deleteCity(item.id);
                     // console.log(`Excluir ${item.id} - ${item.nome}`);
                 });
                 deleteButton.appendChild(deleteIcon);
@@ -70,10 +58,6 @@ function listClient() {
                 // Adicionar células à linha da tabela
                 row.appendChild(idCell);
                 row.appendChild(nomeCell);
-                row.appendChild(enderecoCell);
-                row.appendChild(cepCell);
-                row.appendChild(telefoneCell);
-                row.appendChild(descricaoCell);
                 row.appendChild(buttonsCell);
 
                 // Adicionar linha à tabela
@@ -82,16 +66,73 @@ function listClient() {
         });
 };
 
-function deleteClient(id){
-    fetch(`http://127.0.0.1:8000/clientes/${id}`, {
-                        method: 'DELETE',
-                    })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Erro ao tentar remover cliente');
-                            }
-                            console.log('Cliente removido com sucesso');
-                            location.reload();
-                        })
-                        .catch(error => console.error(error));
+function deleteCity(id) {
+    fetch(`http://127.0.0.1:8000/cidades/${id}`, {
+        method: 'DELETE',
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro ao tentar remover cidade');
+            }
+            console.log('Cidade removida com sucesso');
+            location.reload();
+        })
+        .catch(error => console.error(error));
+};
+
+// Carregar dados
+function loadCity() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const cityId = urlParams.get('id');
+    if (cityId != null) {
+        fetch(`http://localhost:8000/cidades/${cityId}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("id").value = data.id;
+                document.getElementById("nome").value = data.nome;
+            })
+            .catch(error => console.error(error));
+    }
+};
+
+function saveCity() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const cityId = urlParams.get('id');
+
+    if (cityId != null) {
+        const form = document.querySelector('#city-form');
+        const formData = new FormData(form);
+        const value = Object.fromEntries(formData.entries());
+        const requestOptions = {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(value)
+        };
+
+        fetch(`http://127.0.0.1:8000/cidades/${cityId}`, requestOptions)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                location.reload();
+            })
+            .catch(error => console.error(error));
+
+    }
+    else {
+        const form = document.querySelector('#city-form');
+        const formData = new FormData(form);
+        const value = Object.fromEntries(formData.entries());
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(value)
+        };
+        fetch(`http://127.0.0.1:8000/cidades`, requestOptions)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                window.location.href = '../../components/tables/table-city.html';
+            })
+            .catch(error => console.error(error));
+    }
 };
