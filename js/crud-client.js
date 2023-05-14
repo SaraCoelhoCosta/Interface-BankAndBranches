@@ -33,7 +33,7 @@ function listClient() {
                 editButton.classList.add("inline-flex", "w-full", "items-center", "text-white", "justify-center", "bg-blue-700", "hover:bg-blue-800", "focus:ring-4", "focus:outline-none", "focus:ring-blue-300", "font-medium", "rounded-lg", "text-sm", "py-2", "text-center", "dark:bg-blue-600", "dark:hover:bg-blue-700", "dark:focus:ring-blue-800"); // adiciona as classes "btn" e "btn-blue" ao botão
 
                 editButton.addEventListener("click", () => {
-                    window.location.href = `../../components/forms/form-client.html?id=${item.id}`;
+                    window.location.href = `../../view/forms/form-client.html?id=${item.id}`;
                 });
                 editButton.appendChild(editIcon);
 
@@ -208,7 +208,7 @@ function saveClient() {
             .then(response => response.json())
             .then(data => {
                 console.log(data);
-                window.location.href = '../../components/tables/table-client.html';
+                window.location.href = '../../view/tables/table-client.html';
             })
             .catch(error => console.error(error));
 
