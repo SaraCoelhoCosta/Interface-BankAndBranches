@@ -91,23 +91,26 @@ function loadClient() {
     const urlParams = new URLSearchParams(window.location.search);
     const clientId = urlParams.get('id');
     if (clientId != null) {
-        fetch(`http://localhost:8000/clientes/${clientId}`)
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById("id").value = data.id;
-                document.getElementById("nome").value = data.nome;
-                document.getElementById("telefone").value = data.telefone;
-                document.getElementById("cep").value = data.cep;
-                document.getElementById("endereco").value = data.endereco;
-                document.getElementById("descricao").value = data.descricao;
-            })
-            .catch(error => console.error(error));
         fetch(`http://localhost:8000/clientes_has_contas/${clientId}`)
             .then(response => response.json())
             .then(data => {
+                document.getElementById("id").value = data.clientes_id;
                 document.getElementById("tipo_contas").value = data.contas_id;
             })
             .catch(error => console.error(error));
+        
+        fetch(`http://localhost:8000/clientes/${clientId}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("nome").value = data.nome;
+                document.getElementById("endereco").value = data.endereco;
+                document.getElementById("cep").value = data.cep;
+                document.getElementById("telefone").value = data.telefone;
+                document.getElementById("descricao").value = data.descricao;
+            })
+            .catch(error => console.error(error));
+
+
     }
 };
 
