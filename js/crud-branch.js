@@ -120,7 +120,8 @@ function saveBranch() {
             .then(response => response.json())
             .then(data => {
                 console.log(data);
-                location.reload();
+                // location.reload();
+                window.location.href = '../../view/tables/table-branch.html';
             })
             .catch(error => console.error(error));
 

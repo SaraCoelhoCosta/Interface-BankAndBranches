@@ -161,7 +161,8 @@ function saveClient() {
             .then(response => response.json())
             .then(data => {
                 console.log(data);
-                location.reload();
+                // location.reload();
+                window.location.href = '../../view/tables/table-client.html';
             })
             .catch(error => console.error(error));
 

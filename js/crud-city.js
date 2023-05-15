@@ -113,7 +113,8 @@ function saveCity() {
             .then(response => response.json())
             .then(data => {
                 console.log(data);
-                location.reload();
+                // location.reload();
+                window.location.href = '../../view/tables/table-city.html';
             })
             .catch(error => console.error(error));
 
